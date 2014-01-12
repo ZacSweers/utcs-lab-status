@@ -7,7 +7,7 @@ var Version = "0.0.1";
 var Identifier = Name + " " + Version;
 
 var app = require("http").createServer(handler),
-	io = require("./Modules/socket.io").listen(app, {log: false}),
+	io = require("socket.io").listen(app, {log: false}),
 	fs = require("fs")
 
 app.listen(80);
@@ -15,9 +15,9 @@ var status
 
 function handler (req, res) {
 	if (req.url == "" || req.url == "/") {
-		req.url = "/Index.html";
+		req.url = "/index.html";
 	}
-	fs.readFile(__dirname + "/Public" + req.url,
+	fs.readFile(__dirname + "/public" + req.url,
 	function (err, data) {
 		if (err) {
 			res.writeHead(500);
@@ -33,9 +33,9 @@ io.sockets.on("connection", function (socket) {
 });
 
 var options = {
-	key: fs.readFileSync("Certificates/Server.key"),
-	cert: fs.readFileSync("Certificates/Server.pem"),
-	ca: [ fs.readFileSync("Certificates/Client.pem") ],
+	key: fs.readFileSync("certs/server.key"),
+	cert: fs.readFileSync("certs/server.pem"),
+	ca: [ fs.readFileSync("certs/client.pem") ],
 	requestCert: true
 };
 
