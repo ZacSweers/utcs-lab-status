@@ -1,0 +1,24 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+	<head>
+		<title>Lab Status</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/color/jquery.color-2.1.0.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="map.js"></script>
+	</head>
+	<body>
+		<div id="toggles">
+			<a href="#third-floor" id="lab_1_toggle">Third Floor Lab</a>
+			<a href="#basement" id="lab_2_toggle">Basement Lab</a>
+		</div>
+		<div id="maps">
+			<div id="wrapper">
+				<h1>Third Floor Lab &mdash; GDC</h1>
+				<div id="lab_1" class="map"></div>
+				<div id="lab_2" class="map"></div>
+			</div>
+		</div>
+	</body> 
+</html>
