@@ -82,7 +82,7 @@ Options:
 		for {
 			select {
 			case <-ticker.C:
-				poll(hosts, logfile, repeater)
+				poll(hosts, repeater)
 			}
 		}
 	}()
@@ -91,11 +91,10 @@ Options:
 
 }
 
-func poll(hosts []string, logfile string, repeater string) {
+func poll(hosts []string, repeater string) {
 
 	fmt.Println("Polling hosts ... ")
 
-	pollTime := time.Now()
 	var availableHosts, unavailableHosts, unreachableHosts []string
 	for _, host := range hosts {
 
