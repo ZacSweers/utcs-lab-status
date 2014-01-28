@@ -1,19 +1,19 @@
-var net = require("net");
-var tls = require("tls");
-var fs = require("fs");
-
 var Name = "Lab Status Repeater";
-var Version = "0.0.1";
+var Version = "0.0.2";
 var Identifier = Name + " " + Version;
 
+var request = require("request");
 var app = require("http").createServer(handler),
 	io = require("socket.io").listen(app, {log: false}),
 	fs = require("fs")
 
+poll();
+
+console.log(Identifier);
 app.listen(80);
 var status
 
-function handler (req, res) {
+function handler(req, res) {
 	if (req.url == "" || req.url == "/") {
 		req.url = "/index.html";
 	}
@@ -28,25 +28,19 @@ function handler (req, res) {
 	});
 }
 
-io.sockets.on("connection", function (socket) {
-	socket.emit("status", status);
-});
-
-var options = {
-	key: fs.readFileSync("certs/server.key"),
-	cert: fs.readFileSync("certs/server.pem"),
-	ca: [ fs.readFileSync("certs/client.pem") ],
-	requestCert: true
-};
-
-var server = tls.createServer(options, function(stream) {
-	stream.setEncoding("utf8");
-	stream.on("data", function(data) {
+function poll() {
+	request({
+		uri: "http://www.cs.utexas.edu/~yeh/cgi-bin/poll.scgi",
+	}, function(error, response, data) {
 		status = data
 		io.sockets.emit("status", data)
 	});
-});
+}
 
-server.listen(8000, function() {
-	console.log(Identifier);
+setInterval(function() {
+	poll();
+}, 60*1000);
+
+io.sockets.on("connection", function(socket) {
+	socket.emit("status", status);
 });

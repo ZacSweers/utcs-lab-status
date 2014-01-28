@@ -1,26 +1,20 @@
 var socket = io.connect("http://www.utcslabs.org");
 socket.on("status", function (data) {
 
-	var status = JSON.parse(data);
-
-	if (status["No"] != null) {
-		for (var i = 0; i < status["No"].length; i++) {
-			var host = status["No"][i];
-			$("#" + host).animate({backgroundColor: "#cf948c"}, "slow").attr("title", "Unavailable (" + host + ")");
-		}
-	}
-
-	if (status["Yes"] != null) {
-		for (var i = 0; i < status["Yes"].length; i++) {
-			var host = status["Yes"][i];
-			$("#" + host).animate({backgroundColor: "#b7d6a5"}, "slow").attr("title", "Available (" + host + ")");
-		}
-	}
-
-	if (status["Offline"] != null) {
-		for (var i = 0; i < status["Offline"].length; i++) {
-			var host = status["Offline"][i];
-			$("#" + host).animate({backgroundColor: "#beb7b7"}, "slow").attr("title", "Offline (" + host + ")");
+	var statusJSON = JSON.parse(data);
+	for (var host in statusJSON) {
+		if (statusJSON.hasOwnProperty(host)) {
+			var hostStatus = statusJSON[host];
+			if (hostStatus["online"] === "false") {
+				$("#" + host).animate({backgroundColor: "#beb7b7"}, "slow").attr("title", "Offline (" + host + ")");
+			} else {
+				var hostInfo = "Load: " + hostStatus["load"] + " Total Users: " + hostStatus["numUsers"];
+				if (hostStatus["localUser"] != null) {
+					$("#" + host).animate({backgroundColor: "#cf948c"}, "slow").attr("title", "Unavailable (" + host + ")\n" + hostInfo);
+				} else {
+					$("#" + host).animate({backgroundColor: "#b7d6a5"}, "slow").attr("title", "Available (" + host + ")\n" + hostInfo);
+				}
+			}
 		}
 	}
 	
